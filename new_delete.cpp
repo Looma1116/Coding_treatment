@@ -16,5 +16,6 @@ int main() {
     std::cout << i << ".element of list : " << *(list+i) << std::endl;
     }
     
+    delete[] list;
     return 0;
 }
