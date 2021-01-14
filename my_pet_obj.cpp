@@ -4,7 +4,7 @@ class Animal{
   private:
    int food;
    int weight;
-  int happy;
+   int happy;
 
   public:
 
