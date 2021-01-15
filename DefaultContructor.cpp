@@ -74,4 +74,6 @@ int main(){
   /////////////////////////////////////////////////////////////////
   Date day2 = Date(); //Contructor Date 함수 호출 명시적방법 (explicit)
   day2.ShowDate();
+  
+  // Date day3(); 라고하면 안된다!
 }
