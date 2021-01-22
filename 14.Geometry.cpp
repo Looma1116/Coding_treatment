@@ -38,13 +38,14 @@ void Geometry::AddPoint(Point &point){
 }
 
 void Geometry::PrintDistance(){
-  int distance=0;
-  int &d = distance;
+  double distance=0;
+  double &d = distance;
   
   for(int i = 0 ; i < num; i++){
     for(int j = 0 ;j<i; j++){
       d += pow((point_array[i]->x-point_array[j]->x),2);
       d += pow((point_array[i]->y-point_array[j]->y),2);
+      d = sqrt(d);
     }
   }
 
