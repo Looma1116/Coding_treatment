@@ -46,4 +46,4 @@ print(Chess(B, N, M))
 # WWWWWWWWWWBWB
 # WWWWWWWWWWBWB => 체스판 입력
 
-# 출력 : 횟수
+# 출력 : 횟수 
