@@ -1,14 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
-    int array[10] = {4, 1, 5, 2, 6, 10, 9, 7, 8, 3};
+    
     int tmp, j;
-
-    for (int i = 0; i < 9; i++)
+    int n;
+    scanf("%d", &n);
+    int *array = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n;i++){
+        scanf("%d", &array[i]);
+    }
+    for (int i = 0; i < n-1; i++)
     {
         j = i;
-        while (array[j] > array[j + 1])
+         while (array[j] > array[j + 1] && j >= 0)
         {
             tmp = array[j];
             array[j] = array[j + 1];
@@ -17,7 +23,7 @@ int main()
         }
     }
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < n; i++)
     {
         printf("%d ", array[i]);
     }
