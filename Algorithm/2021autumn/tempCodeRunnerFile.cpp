@@ -76,6 +76,7 @@ int main(){
         }
         if(command == 'p'){
             printHeap();
+            printf("\n");
         }
         if(command == 'q'){
             return 0;
