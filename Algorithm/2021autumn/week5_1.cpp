@@ -16,8 +16,8 @@ void getNODE(node** p){
 
 void addNODE(node **p, int data){
     node *E, *R;
-    getNODE(&E);
     getNODE(&R);
+
     R->data = data;
     E = (*p);
     if((*p)==NULL){
@@ -27,8 +27,8 @@ void addNODE(node **p, int data){
         while(E->right!= NULL){
             E = E->right;
         }
-    }
     E->right = R;
+    }
 }
 
 int lenLIST(node* p){
@@ -43,47 +43,54 @@ int lenLIST(node* p){
     return i;
 }
 
-void partition(node* p, node** L2){
-    int L = lenLIST(p);
-    node *E;
-    getNODE(&E);
-
-    E = p;
-    for (int i = 1; i < L / 2;i++){
-        E = E->right;
+void partition(node* p, node** L1, node** L2){
+    int Len = lenLIST(p);
+    *L1 = p;
+    for (int i = 1; i < Len / 2;i++){
+        p = p->right;
     }
-    *L2 = E->right;
-    E->right = NULL;
+    *L2 = p->right;
+    p->right = NULL;
 }
 
 node* merge(node** L1, node** L2){
-    node *L = NULL;
-
+    node *L,*E = NULL;
+    getNODE(&L);
+    if ((*L1)->data <= (*L2)->data) {
+        L = (*L1);
+        (*L1) = (*L1)->right;
+    }
+    else {
+        L = (*L2);
+        (*L2) = (*L2)->right;
+    }
+    E = L;
     while(*L1 != NULL && *L2 != NULL){
         if((*L1)->data <(*L2)->data){
-            addNODE(&L, (*L1)->data);
+            E->right = *L1;
             (*L1) = (*L1)->right;
         }
         else{
-            addNODE(&L, (*L2)->data);
+            E->right = *L2;
             (*L2) = (*L2)->right;;
         }
+        E = E->right;
     }
-    while(L1!=NULL){
-        addNODE(L, L1->data);
-        L1 = L1->right;
-
+    while(*L1!=NULL){
+        E->right = *L1;
+        (*L1) = (*L1)->right;
+        E = E->right;
     }
-    while(L2!=NULL){
-        addNODE(L, L2->data);
-        L2 = L2->right;
+    while(*L2!=NULL){
+        E->right = *L2;
+        (*L2) = (*L2)->right;
+        E = E->right;
     }
     return L;
 }
 
 
-void printLIST(node* p){
-    int L = lenLIST(p);
+void printLIST(node* p, int L){
     node *E;
     getNODE(&E);
     E = p;
@@ -93,24 +100,15 @@ void printLIST(node* p){
     }
 }
 
-void mergeSort(node* p){
-    if(lenLIST(p)<=1){
+void mergeSort(node** p){
+    if(lenLIST(*p)<=1){
         return;
     }
     node *L1, *L2;
-    getNODE(&L1);
-    getNODE(&L2);
-    L1 = p;
-    partition(p, &L2);
-    printf("\nL1:");
-    printLIST(L1);
-    printf("\nL2:");
-    printLIST(L2);
-    mergeSort(L1);
-    mergeSort(L2);
-    p = merge(L1, L2);
-    printf("\nmerged:");
-    printLIST(p);
+    partition(*p, &L1, &L2);
+    mergeSort(&L1);
+    mergeSort(&L2);
+    *p = merge(&L1, &L2);
     return;
 }
 
@@ -119,16 +117,12 @@ int main(){
     int n, data;
     root = NULL;
     scanf("%d", &n);
-    if(n==0){
-        return 0;
-    }
-    scanf("%d", &data);
-    root->data = data;
-    for (int i = 1; i < n; i++){
+
+    for (int i = 0; i < n; i++){
         scanf("%d", &data);
-        addNODE(root, data);
+        addNODE(&root, data);
     }
-    mergeSort(root);
-    printLIST(root);
+    mergeSort(&root);
+    printLIST(root, n);
     return 0;
 }
