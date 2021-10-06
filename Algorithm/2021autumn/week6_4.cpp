@@ -15,12 +15,10 @@ int binarySearch(int *A, int k, int l, int r)
     }
     if (A[mid] > k)
     {
-
         binarySearch(A, k, l, mid - 1);
     }
     else
     {
-
         binarySearch(A, k, mid + 1, r);
     }
 }
