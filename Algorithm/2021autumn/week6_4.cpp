@@ -44,7 +44,7 @@ int main()
         printf(" -1");
         return 0;
     }
-    if (a < 0 && b < 0)
+    if (a == b && b < 0)
     {
         printf(" -1");
         return 0;
@@ -56,7 +56,10 @@ int main()
             b = b * -1;
             b--;
         }
-
+        if (a < 0)
+        {
+            a = a * -1;
+        }
         for (i = a; i <= b; i++)
         {
             printf(" %d", i);
