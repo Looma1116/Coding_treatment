@@ -140,6 +140,43 @@ void insertItem(node *root, int key)
             Ex->lChild = child;
             child->parent = Ex;
         }
+        else
+        {
+            node *child;
+            getNODE(&child);
+            child->key = key;
+            Ex->rChild = child;
+            child->parent = Ex;
+        }
+    }
+}
+
+void removeElement(node *root, int key)
+{
+    node *Ex;
+    Ex = root;
+    while (Ex->key != key && Ex != NULL)
+    {
+        if (Ex->key > key)
+        {
+            Ex = Ex->lChild;
+        }
+        else
+        {
+            Ex = Ex->rChild;
+        }
+    }
+    if (Ex == NULL)
+    {
+        printf("x");
+        return;
+    }
+    else
+    {
+        if (inOrderSucc(Ex) == NULL)
+        {
+            priu
+        }
     }
 }
 
@@ -154,6 +191,8 @@ int main()
         scanf("%c", &c);
         if (c == 'i')
         {
+            scanf("%d", &n);
+            insertItem(root, n);
         }
         else if (c == 'd')
         {
