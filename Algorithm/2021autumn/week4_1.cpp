@@ -10,13 +10,13 @@ void downHeap(int i){
     if(i*2 > n && i*2+1 > n){
         return;
     }
-        int big = i * 2;
-        if ((i * 2 + 1) <= n)
+    int big = i * 2;
+    if ((i * 2 + 1) <= n)
+    {
+        if (H[i * 2 + 1] > H[big])
         {
-            if (H[i * 2 + 1] > H[big])
-            {
-                big = i * 2 + 1;
-            }
+            big = i * 2 + 1;
+        }
     }
     if(H[i]>= H[big]){
         return;

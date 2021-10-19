@@ -1,24 +1,25 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef struct NODE
 {
     int key;
-    NODE *parent;
-    NODE *lChild;
-    NODE *rChild;
+    struct NODE* parent;
+    struct NODE* lChild;
+    struct NODE* rChild;
 } node;
 
-void getNODE(node **w)
+void getNODE(node** w)
 {
-    *w = (node *)malloc(sizeof(node));
+    *w = (node*)malloc(sizeof(node));
     (*w)->lChild = NULL;
     (*w)->rChild = NULL;
     (*w)->parent = NULL;
 }
 
-bool isRoot(node *w)
+bool isRoot(node* w)
 {
     if (w->parent == NULL)
     {
@@ -29,7 +30,8 @@ bool isRoot(node *w)
         return false;
     }
 }
-bool isExternal(node *w)
+
+bool isExternal(node* w)
 {
     if (w->lChild == NULL && w->rChild == NULL)
     {
@@ -41,7 +43,7 @@ bool isExternal(node *w)
     }
 }
 
-bool isInternal(node *w)
+bool isInternal(node* w)
 {
     if (w->lChild != NULL || w->rChild != NULL)
     {
@@ -53,7 +55,33 @@ bool isInternal(node *w)
     }
 }
 
-node *sibling(node *w)
+node* treeSearch(node* root, int key) {
+    if (isExternal(root)) {
+        return root;
+    }
+    if (root->key == key) {
+        return root;
+    }
+    else if (key < root->key) {
+        return treeSearch(root->lChild, key);
+    }
+    else {
+        return treeSearch(root->rChild, key);
+    }
+}
+
+void expandExternal(node* z) {
+    node* l;
+    node* r;
+    getNODE(&l);
+    getNODE(&r);
+    l->parent = z;
+    r->parent = z;
+    z->lChild = l;
+    z->rChild = r;
+    return;
+}
+node* sibling(node* w)
 {
     if (isRoot(w))
     {
@@ -70,7 +98,7 @@ node *sibling(node *w)
     }
 }
 
-node *inOrderSucc(node *w)
+node* inOrderSucc(node* w)
 {
     w = w->rChild;
     if (isExternal(w))
@@ -85,9 +113,9 @@ node *inOrderSucc(node *w)
     return w;
 }
 
-node *reduceExternal(node *z)
+void reduceExternal(node* z)
 {
-    node *w, *zs;
+    node* w, * zs;
     w = z->parent;
     zs = sibling(z);
     if (isRoot(w))
@@ -97,7 +125,7 @@ node *reduceExternal(node *z)
     }
     else
     {
-        node *g = w->parent;
+        node* g = w->parent;
         zs->parent = g;
         if (g->lChild == w)
         {
@@ -108,103 +136,119 @@ node *reduceExternal(node *z)
             g->rChild = zs;
         }
     }
+    free(z);
+    free(w);
 }
 
-void insertItem(node *root, int key)
+void insertItem(node* root, int key)
 {
-    node *Ex;
-    Ex = root;
-    if (root == NULL)
-    {
-        getNODE(&root);
-        root->key = key;
+    node* Ex;
+    Ex = treeSearch(root, key);
+
+    if (isInternal(Ex)) {
+        return;
     }
-    else
-    {
-        while (isInternal(Ex))
-        {
-            if (Ex->key > key)
-            {
-                Ex = Ex->lChild;
-            }
-            else
-            {
-                Ex = Ex->rChild;
-            }
-        }
-        if (Ex->key > key)
-        {
-            node *child;
-            getNODE(&child);
-            child->key = key;
-            Ex->lChild = child;
-            child->parent = Ex;
-        }
-        else
-        {
-            node *child;
-            getNODE(&child);
-            child->key = key;
-            Ex->rChild = child;
-            child->parent = Ex;
-        }
+    else {
+        Ex->key = key;
+        expandExternal(Ex);
+        return;
     }
 }
 
-void removeElement(node *root, int key)
+void removeElement(node* root, int key)
 {
-    node *Ex;
-    Ex = root;
-    while (Ex->key != key && Ex != NULL)
-    {
-        if (Ex->key > key)
-        {
-            Ex = Ex->lChild;
-        }
-        else
-        {
-            Ex = Ex->rChild;
-        }
+
+    node* Ex;
+    Ex = treeSearch(root, key);
+
+    if (isExternal(Ex)) {
+        printf("X\n");
+        return;
     }
-    if (Ex == NULL)
+    node* z = Ex->lChild;
+    if (!isExternal(z)) {
+        z = Ex->rChild;
+    }
+    if (isExternal(z)) { //case1
+        printf("%d\n", Ex->key);
+        reduceExternal(z);
+    }
+    else //case2
     {
-        printf("x");
+        printf("%d\n", Ex->key);
+        node* y = inOrderSucc(Ex);
+        node* z = y->lChild;
+        Ex->key = y->key;
+        reduceExternal(z);
+    }
+
+}
+
+void findElement(node* root, int key)
+{
+    node* Ex;
+    Ex = treeSearch(root, key);
+    if (isExternal(Ex))
+    {
+        printf("X\n");
         return;
     }
     else
     {
-        if (inOrderSucc(Ex) == NULL)
-        {
-            priu
-        }
+        printf("%d\n", Ex->key);
+        return;
     }
 }
 
+void preOrder(node* root)
+{
+
+    printf(" %d", root->key);
+    if (!isExternal(root->lChild)) {
+        preOrder(root->lChild);
+    }
+    if (!isExternal(root->rChild)) {
+        preOrder(root->rChild);
+    }
+    return;
+}
 int main()
 {
-    node *root = NULL;
-    int n, i;
+    node* root = NULL;
+    getNODE(&root);
+    int n;
     char c;
 
-    while (c != 'c')
+    while (1)
     {
         scanf("%c", &c);
         if (c == 'i')
         {
             scanf("%d", &n);
+            getchar();
             insertItem(root, n);
         }
         else if (c == 'd')
         {
+            scanf("%d", &n);
+            getchar();
+            removeElement(root, n);
         }
         else if (c == 's')
         {
+            scanf("%d", &n);
+            getchar();
+            findElement(root, n);
         }
         else if (c == 'p')
         {
+            preOrder(root);
+            printf("\n");
         }
         else if (c == 'q')
         {
+            break;
         }
     }
+    return 0;
 }

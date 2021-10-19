@@ -26,7 +26,7 @@ void quickSort(int* array, int start, int end){
             break;
         }
         tmp = array[i];
-        array[i] = array[j];
+        array[i] = array[j]; 
         array[j] = tmp;
     }
 
