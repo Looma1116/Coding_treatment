@@ -30,6 +30,7 @@ void getVertex(vertex **a, int value)
     *a = (vertex *)malloc(sizeof(vertex));
     (*a)->value = value;
     (*a)->visit = 0;
+    (*a)->next = NULL;
 
     ad *edge;
     getAd(&edge);
@@ -93,44 +94,74 @@ void deleteEdge(vertex *a, vertex *b)
     return;
 }
 
+void addVertex(vertex **a)
+{
+    vertex *tmp, *baby;
+    tmp = (*a);
+    while (tmp->next != NULL)
+    {
+        tmp = tmp->next;
+    }
+    getVertex(&baby, tmp->value + 1);
+    tmp->next = baby;
+}
+void DFS(vertex *a)
+{
+    a->visit = 1;
+    printf("%d\n", a->value);
+    vertex *tmp = a;
+    ad *finder;
+    finder = tmp->header->next;
+    while (tmp != NULL)
+    {
+        while (finder->to->visit == 1)
+        {
+            if (finder->next == NULL)
+            {
+                return;
+            }
+            finder = finder->next;
+        }
+        tmp = finder->to;
+        DFS(tmp);
+    }
+    return;
+}
+
 int main()
 {
     char command;
     int n, m, s, ver1, ver2;
-    vertex *a, *b, *c, *d, *e, *f, *tmp, *tmp2;
+    vertex *a, *x, *y;
+    getVertex(&a, 1);
 
     scanf("%d %d %d", &n, &m, &s);
+    for (int i = 1; i < n; i++)
+    {
+        addVertex(&a);
+    }
     for (int i = 0; i < m; i++)
     {
         scanf("%d %d", &ver1, &ver2);
+        x = a;
+        y = a;
+        x = a;
+        for (int i = 1; i < ver1; i++)
+        {
+            x = x->next;
+        }
+        for (int i = 1; i < ver2; i++)
+        {
+            y = y->next;
+        }
+        addEdge(x, y, 1);
+        addEdge(y, x, 1);
     }
-    scanf("%c", &command);
-    if (command == 'a')
+    x = a;
+    for (int i = 1; i < s; i++)
     {
-        scanf("%d", &num);
-        if (num > 6)
-        {
-            printf("-1\n");
-            continue;
-        }
-        tmp = a;
-        for (int i = 1; i < num; i++)
-        {
-            tmp = tmp->next;
-        }
-        ad *edge = tmp->header->next;
-        if (edge == NULL)
-        {
-            printf("-1\n");
-            continue;
-        }
-        while (edge != NULL)
-        {
-            printf(" %d %d", edge->to->value, edge->weight);
-            edge = edge->next;
-        }
-        printf("\n");
+        x = x->next;
     }
-
+    DFS(x);
     return 0;
 }
