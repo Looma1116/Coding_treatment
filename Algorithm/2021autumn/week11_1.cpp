@@ -13,6 +13,7 @@ typedef struct ad
 
 typedef struct vertex
 {
+    int visit;
     ad *header;
     int value;
     vertex *next;
@@ -28,6 +29,7 @@ void getVertex(vertex **a, int value)
 {
     *a = (vertex *)malloc(sizeof(vertex));
     (*a)->value = value;
+    (*a)->visit = 0;
 
     ad *edge;
     getAd(&edge);
@@ -94,72 +96,41 @@ void deleteEdge(vertex *a, vertex *b)
 int main()
 {
     char command;
-    int num;
+    int n, m, s, ver1, ver2;
     vertex *a, *b, *c, *d, *e, *f, *tmp, *tmp2;
 
-    while (1)
+    scanf("%d %d %d", &n, &m, &s);
+    for (int i = 0; i < m; i++)
     {
-        scanf("%c", &command);
-        if (command == 'a')
-        {
-            scanf("%d", &num);
-            if (num > 6)
-            {
-                printf("-1\n");
-                continue;
-            }
-            tmp = a;
-            for (int i = 1; i < num; i++)
-            {
-                tmp = tmp->next;
-            }
-            ad *edge = tmp->header->next;
-            if (edge == NULL)
-            {
-                printf("-1\n");
-                continue;
-            }
-            while (edge != NULL)
-            {
-                printf(" %d %d", edge->to->value, edge->weight);
-                edge = edge->next;
-            }
-            printf("\n");
-        }
-        if (command == 'm')
-        {
-            int from, to, w;
-            scanf("%d %d %d", &from, &to, &w);
-            if (from > 6 || to > 6)
-            {
-                printf("-1\n");
-                continue;
-            }
-            tmp = a;
-            tmp2 = a;
-            for (int i = 1; i < from; i++)
-            {
-                tmp = tmp->next;
-            }
-            for (int i = 1; i < to; i++)
-            {
-                tmp2 = tmp2->next;
-            }
-            if (w == 0)
-            {
-                deleteEdge(tmp, tmp2);
-                continue;
-            }
-            addEdge(tmp, tmp2, w);
-            if (tmp != tmp2)
-            {
-                addEdge(tmp2, tmp, w);
-            }
-        }
-        if (command == 'q')
-        {
-            break;
-        }
+        scanf("%d %d", &ver1, &ver2);
     }
+    scanf("%c", &command);
+    if (command == 'a')
+    {
+        scanf("%d", &num);
+        if (num > 6)
+        {
+            printf("-1\n");
+            continue;
+        }
+        tmp = a;
+        for (int i = 1; i < num; i++)
+        {
+            tmp = tmp->next;
+        }
+        ad *edge = tmp->header->next;
+        if (edge == NULL)
+        {
+            printf("-1\n");
+            continue;
+        }
+        while (edge != NULL)
+        {
+            printf(" %d %d", edge->to->value, edge->weight);
+            edge = edge->next;
+        }
+        printf("\n");
+    }
+
     return 0;
 }
