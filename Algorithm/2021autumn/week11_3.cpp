@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int count = 0;
 typedef struct vertex vertex_;
 
 typedef struct ad
 {
     int weight;
+    int pass;
     vertex_ *to;
     ad *next;
 } ad;
@@ -23,6 +25,7 @@ void getAd(ad **edge)
 {
     *edge = (ad *)malloc(sizeof(ad));
     (*edge)->next = NULL;
+    (*edge)->pass = 0;
 }
 
 void getVertex(vertex **a, int value)
@@ -57,6 +60,21 @@ void addEdge(vertex *a, vertex *b, int weight)
     edge->to = b;
     edge->next = tmp->next;
     tmp->next = edge;
+    return;
+}
+void passEdge(vertex *a, vertex *b)
+{
+    ad *tmp;
+    tmp = a->header->next;
+    while (tmp != NULL)
+    {
+        if (tmp->to == b)
+        {
+            tmp->pass = 1;
+            return;
+        }
+        tmp = tmp->next;
+    }
     return;
 }
 
@@ -108,7 +126,7 @@ void addVertex(vertex **a)
 void DFS(vertex *a)
 {
     a->visit = 1;
-    printf("%d\n", a->value);
+    // printf("%d\n", a->value);
     vertex *tmp = a;
     ad *finder;
     finder = tmp->header->next;
@@ -116,6 +134,11 @@ void DFS(vertex *a)
     {
         while (finder->to->visit == 1)
         {
+            if (finder->pass == 0)
+            {
+                count++;
+            }
+            // printf("[%d]\n", count);
             if (finder->next == NULL)
             {
                 return;
@@ -123,6 +146,8 @@ void DFS(vertex *a)
             finder = finder->next;
         }
         tmp = finder->to;
+        passEdge(a, tmp);
+        passEdge(tmp, a);
         DFS(tmp);
     }
     return;
@@ -158,10 +183,19 @@ int main()
         addEdge(y, x, 1);
     }
     x = a;
+    s = 1;
     for (int i = 1; i < s; i++)
     {
         x = x->next;
     }
     DFS(x);
+    if (count > 0)
+    {
+        printf("1");
+    }
+    else
+    {
+        printf("0");
+    }
     return 0;
 }
