@@ -16,6 +16,7 @@ typedef struct node
     node *next;
     int element;
 } node;
+
 typedef struct vertex
 {
     char name;

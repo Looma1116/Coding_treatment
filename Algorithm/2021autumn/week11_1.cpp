@@ -37,6 +37,7 @@ void getVertex(vertex **a, int value)
     edge->weight = 0;
     (*a)->header = edge;
 }
+
 void addEdge(vertex *a, vertex *b, int weight)
 {
     ad *edge, *tmp;
