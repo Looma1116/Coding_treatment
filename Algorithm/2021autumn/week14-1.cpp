@@ -64,6 +64,30 @@ void addVertex(vertex **header, vertex *add)
     return;
 }
 
+void addResult(vertex **header, vertex *add)
+{
+    vertex *tmp;
+    tmp = (*header);
+    if ((*header)->next == NULL)
+    {
+        (*header)->next = add;
+        add->prev = (*header);
+        return;
+    }
+    while (tmp->next != NULL && tmp->next->value <= add->value)
+    {
+        tmp = tmp->next;
+    }
+    if (tmp->next != NULL)
+    {
+        tmp->next->prev = add;
+    }
+    add->next = tmp->next;
+    tmp->next = add;
+    add->prev = tmp;
+    return;
+}
+
 int isEmpty(vertex *header)
 {
     if (header->next == NULL)
@@ -80,7 +104,10 @@ vertex *removeMin(vertex **header)
 {
     vertex *tmp = (*header)->next;
     (*header)->next = (*header)->next->next;
-    (*header)->next->prev = (*header);
+    if ((*header)->next != NULL)
+    {
+        (*header)->next->prev = (*header);
+    }
     return tmp;
 }
 
@@ -172,6 +199,7 @@ void DSP(vertex *Qheader, vertex *s)
     result->distance = -1;
 
     s->distance = 0;
+    replaceKey(&s);
     removeMin(&Qheader);
     tmp = s->header->next;
     while (tmp != NULL)
@@ -183,11 +211,11 @@ void DSP(vertex *Qheader, vertex *s)
     while (isEmpty(Qheader) != 1)
     {
         u = removeMin(&Qheader);
-        // put = u;
-        // put->next = NULL;
-        // put->prev = NULL;
-        // addVertex(&result, put);
-        printf("%d %d\n", u->value, u->distance);
+        put = u;
+        put->next = NULL;
+        put->prev = NULL;
+        addResult(&result, put);
+        // printf("%d %d\n", u->value, u->distance);
         tmp = u->header->next;
         while (tmp != NULL)
         {
@@ -203,12 +231,15 @@ void DSP(vertex *Qheader, vertex *s)
             tmp = tmp->next;
         }
     }
-    // u = result->next;
-    // while (u != NULL)
-    // {
-    //     printf("%d %d", u->value, u->distance);
-    //     u = u->next;
-    // }
+    u = result->next;
+    while (u != NULL)
+    {
+        if (u->distance < 20000)
+        {
+            printf("%d %d\n", u->value, u->distance);
+        }
+        u = u->next;
+    }
     return;
 }
 
