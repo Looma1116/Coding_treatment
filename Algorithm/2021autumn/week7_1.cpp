@@ -113,14 +113,29 @@ node* inOrderSucc(node* w)
     return w;
 }
 
-void reduceExternal(node* z)
+void insertItem(node* root, int key)
+{
+    node* Ex;
+    Ex = treeSearch(root, key);
+
+    if (isInternal(Ex)) {
+        return;
+    }
+    else {
+        expandExternal(Ex);
+        Ex->key = key;
+        return;
+    }
+}
+
+node* reduceExternal(node** root, node* z)
 {
     node* w, * zs;
     w = z->parent;
     zs = sibling(z);
     if (isRoot(w))
     {
-        w = zs;
+        *root = zs;
         zs->parent = NULL;
     }
     else
@@ -138,28 +153,15 @@ void reduceExternal(node* z)
     }
     free(z);
     free(w);
+    return zs;
 }
 
-void insertItem(node* root, int key)
+
+
+void removeElement(node** root, int key)
 {
     node* Ex;
-    Ex = treeSearch(root, key);
-
-    if (isInternal(Ex)) {
-        return;
-    }
-    else {
-        Ex->key = key;
-        expandExternal(Ex);
-        return;
-    }
-}
-
-void removeElement(node* root, int key)
-{
-
-    node* Ex;
-    Ex = treeSearch(root, key);
+    Ex = treeSearch(*root, key);
 
     if (isExternal(Ex)) {
         printf("X\n");
@@ -171,7 +173,8 @@ void removeElement(node* root, int key)
     }
     if (isExternal(z)) { //case1
         printf("%d\n", Ex->key);
-        reduceExternal(z);
+        reduceExternal(root, z);
+        
     }
     else //case2
     {
@@ -179,7 +182,8 @@ void removeElement(node* root, int key)
         node* y = inOrderSucc(Ex);
         node* z = y->lChild;
         Ex->key = y->key;
-        reduceExternal(z);
+        reduceExternal(root, z);
+        
     }
 
 }
@@ -202,8 +206,12 @@ void findElement(node* root, int key)
 
 void preOrder(node* root)
 {
-
-    printf(" %d", root->key);
+    if (isExternal(root)) {
+        return;
+    }
+    else {
+        printf(" %d", root->key);
+    }
     if (!isExternal(root->lChild)) {
         preOrder(root->lChild);
     }
@@ -232,7 +240,7 @@ int main()
         {
             scanf("%d", &n);
             getchar();
-            removeElement(root, n);
+            removeElement(&root, n);
         }
         else if (c == 's')
         {
