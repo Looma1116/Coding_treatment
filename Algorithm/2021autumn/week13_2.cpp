@@ -6,7 +6,7 @@ int total = 0;
 int main()
 {
     int n, m, v1, v2, w, min = 9999, s1, s2;
-    int G[101][101], B[101], P[101];
+    int G[101][101], P[101];
     scanf("%d %d", &n, &m);
 
     //배낭 초기화
