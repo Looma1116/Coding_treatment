@@ -161,31 +161,31 @@ typedef struct edge
 {
     _node *from;
     _node *to;
-    int weight;
     edge *next;
+    int weight;
 } edge;
 
 typedef struct node
 {
-    int value;
+    int name;
     int distance;
-    int visit;
     edge *header;
     node *next;
     node *prev;
 } node;
 
-void addNode(node *p);
-void addEdge(node *from, node *to, int w);
 void getNode(node **p);
 void getEdge(edge **e);
-void replaceKey(node *p);
+void addNode(node *add);
+void addEdge(node *v1, node *v2, int w);
 node *removeMin();
 node *findNode(int name);
-void prim();
+bool isEmpty();
+void replaceKey(node *p);
+void Prim();
 
-int n, m, total;
-
+node *G;
+int total;
 // kruscal
 int n, m, v1, v2, w, min = 9999, s1, s2;
 int G[101][101], Sack[101];
